@@ -1,0 +1,6 @@
+[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12; 
+Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force; 
+Install-Module -Name invoke-atomicredteam,powershell-yaml -Scope CurrentUser -Force; 
+IEX (IWR 'https://raw.githubusercontent.com/redcanaryco/invoke-atomicredteam/master/install-atomicsfolder.ps1' -UseBasicParsing);
+Install-AtomicsFolder;
+Invoke-AtomicTest All -Confirm:$false;
