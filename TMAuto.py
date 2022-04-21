@@ -52,7 +52,8 @@ def marriottMacro():
     mainDLG = app.window(title_re="^BonusPointsOffer")
     productKeyDLG = mainDLG.child_window(title="Enter your product key", control_type="Window")
     productKeyDLG.CloseButton.click_input()
-    mainDLG.EnableEditingButton.click_input() #Enable editing, pivots to enable content
+    time.sleep(3)
+    mainDLG.child_window(title="Enable Editing", control_type="Button").click_input(double=True)
     time.sleep(5)
     mainDLG.child_window(title="Enable Content", control_type="Button").click_input(double=True)
 
