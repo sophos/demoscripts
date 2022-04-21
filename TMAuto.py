@@ -57,9 +57,7 @@ def marriottMacro():
     mainDLG.child_window(title="Enable Content", control_type="Button").click_input(double=True)
 
 if __name__ == '__main__':
-    if (os.path.isfile(r"C:\threat\outlookIsSetup") == False):
-       print('Outlook is not properly set up')
-    else:
+   
         killProcess('WINWORD.EXE')
 
         if (processRunCheck('outlook.exe') == False):
