@@ -32,6 +32,7 @@ def marriottEmailAttachment():
     
     app = Application(backend="uia").start(r'C:\\Program Files (x86)\\Microsoft Office\\root\\Office16\\OUTLOOK')
     time.sleep(30) #Need time for the activate office dialogue to appear. 
+    print(app.windows())
     mainDLG = app['Outlook Today - Outlook']
     productDLG = mainDLG.child_window(title="Enter your product key", control_type="Window")
     productDLG.child_window(title="Close", control_type="Button").click_input()
