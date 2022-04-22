@@ -31,10 +31,12 @@ def processRunCheck(processname):
 def marriottEmailAttachment():
     
     app = Application(backend="uia").start(r'C:\\Program Files (x86)\\Microsoft Office\\root\\Office16\\OUTLOOK')
-    time.sleep(10) #Need time for the activate office dialogue to appear. 
+    time.sleep(30) #Need time for the activate office dialogue to appear. 
     mainDLG = app['Outlook Today - Outlook']
     productDLG = mainDLG.child_window(title="Enter your product key", control_type="Window")
     productDLG.child_window(title="Close", control_type="Button").click_input()
+    eulaDLG = mainDLG.child_window(title="Accept the license agreement", control_type="Window")
+    eulaDLG.child_window(title="Accept and start Outlook", control_type="Button").click_input()
     mainDLG= app['Outlook Today - Outlook'] #Main application is presented as 'Outlook Today - Outlook'
     mainDLG.sophosTreeItem.click_input(double=True)#Expand the Sophos profile tree
     sophosDLG = app['Sophos - Outlook']
