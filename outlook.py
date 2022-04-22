@@ -51,7 +51,6 @@ if __name__ == '__main__':
             marriottEmailAttachment()
             time.sleep(30)
             print('Outlook is currently running.')
-            marriottMacro()
         
         else:
             print('I am now going to kill the Outlook Process.')
@@ -59,5 +58,3 @@ if __name__ == '__main__':
             time.sleep(5)
             print('Outlook will now start.')
             marriottEmailAttachment()
-            time.sleep(5)
-            marriottMacro()
