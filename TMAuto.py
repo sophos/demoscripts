@@ -55,13 +55,13 @@ def marriottEmailAttachment():
 def marriottMacro():
     app = Application(backend="uia").connect(title_re="^BonusPointsOffer")
     print(app.windows())
-    time.sleep(10)
+    time.sleep(20)
     mainDLG = app.window(title_re="^BonusPointsOffer")
     productKeyDLG = mainDLG.child_window(title="Enter your product key", control_type="Window")
     productKeyDLG.CloseButton.click_input()
-    time.sleep(10)
+    time.sleep(20)
     mainDLG.child_window(title="Enable Editing", control_type="Button").click_input(double=True)
-    time.sleep(10)
+    time.sleep(20)
     mainDLG.child_window(title="Enable Content", control_type="Button").click_input(double=True)
 
 if __name__ == '__main__':
