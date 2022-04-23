@@ -39,6 +39,9 @@ def marriottEmailAttachment():
     #time.sleep(5)
     #eulaDLG = mainDLG.child_window(title="Accept the license agreement", control_type="Window")
     #eulaDLG.child_window(title="Accept and start Outlook", control_type="Button").click()
+    activateDLG = mainDLG.child_window(title="Microsoft Office Activation Wizard", control_type="Window")
+    activateDLG = mainDLG.child_window(title="Cancel", control_type="Button").click()
+
     time.sleep(5)
     mainDLG= app['Outlook Today - Outlook'] #Main application is presented as 'Outlook Today - Outlook'
     mainDLG.sophosTreeItem.click_input(double=True)#Expand the Sophos profile tree
