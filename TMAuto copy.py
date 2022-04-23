@@ -34,11 +34,11 @@ def marriottEmailAttachment():
     time.sleep(30) #Need time for the activate office dialogue to appear. 
     print(app.windows())
     mainDLG = app['Outlook Today - Outlook']
-    #productDLG = mainDLG.child_window(title="Enter your product key", control_type="Window")
-    #productDLG.child_window(title="Close", control_type="Button").click_input()
-    #time.sleep(5)
-    #eulaDLG = mainDLG.child_window(title="Accept the license agreement", control_type="Window")
-    #eulaDLG.child_window(title="Accept and start Outlook", control_type="Button").click()
+    productDLG = mainDLG.child_window(title="Enter your product key", control_type="Window")
+    productDLG.child_window(title="Close", control_type="Button").click_input()
+    time.sleep(5)
+    eulaDLG = mainDLG.child_window(title="Accept the license agreement", control_type="Window")
+    eulaDLG.child_window(title="Accept and start Outlook", control_type="Button").click()
     time.sleep(5)
     mainDLG= app['Outlook Today - Outlook'] #Main application is presented as 'Outlook Today - Outlook'
     mainDLG.sophosTreeItem.click_input(double=True)#Expand the Sophos profile tree
@@ -58,8 +58,8 @@ def marriottMacro():
     print(app.windows())
     time.sleep(20)
     mainDLG = app.window(title_re="^BonusPointsOffer")
-    #productKeyDLG = mainDLG.child_window(title="Enter your product key", control_type="Window")
-    #productKeyDLG.CloseButton.click_input()
+    productKeyDLG = mainDLG.child_window(title="Enter your product key", control_type="Window")
+    productKeyDLG.CloseButton.click_input()
     time.sleep(20)
     mainDLG.child_window(title="Enable Editing", control_type="Button").click_input(double=True)
     time.sleep(20)
