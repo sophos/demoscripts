@@ -38,6 +38,7 @@ def TMSeed():
     mainDLG.type_keys('1')
     mainDLG.type_keys('{ENTER}')
     time.sleep(10)
+    mainDLG = app['Administrator: Windows PowerShell']
     mainDLG.type_keys('2')
     mainDLG.type_keys('{ENTER}')
     time.sleep(10)
