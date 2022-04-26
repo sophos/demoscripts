@@ -68,7 +68,6 @@ def Outlook():
     time.sleep(10)	
 def Word():
     app = Application(backend="uia").connect(title_re="^Free")
-    time.sleep(20)
     mainDLG = app.window(title_re="^Free")
     time.sleep(20)
     wizardDLG=mainDLG['Microsoft Office Activation Wizard2'] #there are two handles with the same child window name
