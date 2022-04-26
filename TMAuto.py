@@ -1,7 +1,5 @@
 from pywinauto import Application, Desktop
 import time
-
-# Outlook function
 def Outlook():
     app = Application(backend="uia").start(r'C:\\Program Files (x86)\\Microsoft Office\\root\\Office16\\OUTLOOK')
     time.sleep(30) #Need time for the activate office dialogue to appear. 
@@ -18,8 +16,6 @@ def Outlook():
     time.sleep(30)
     marriottDLG['BonusPointsOffer.docm776 KB1 of 1 attachmentsUse alt + down arrow to open the options menu'].click_input(double=True) #opens the attachment
     time.sleep(10)	
-
-# Word function
 def Word():
     app = Application(backend="uia").connect(title_re="^BonusPointsOffer")
     time.sleep(20)
@@ -28,7 +24,6 @@ def Word():
     mainDLG.child_window(title="Enable Editing", control_type="Button").click_input(double=True)
     time.sleep(20)
     mainDLG.child_window(title="Enable Content", control_type="Button").click_input(double=True)
-
 if __name__ == '__main__':
     Outlook()
     time.sleep(20)
