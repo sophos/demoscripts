@@ -6,6 +6,7 @@ def Outlook():
     mainDLG=app['Outlook Today - Outlook']
     wizardDLG=mainDLG['Microsoft Office Activation Wizard2'] #there are two handles with the same child window name
     wizardDLG.child_window(title="Cancel", control_type="Button").click() #closes hardware change dialogue
+    time.sleep(5)
     mainDLG.sophosTreeItem.click_input(double=True)#Expand the Sophos profile tree
     time.sleep(5)
     sophosDLG = app['Sophos - Outlook']
