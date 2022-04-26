@@ -16,7 +16,6 @@ def Outlook():
     bankDLG=app['Atomic Red Team - Sophos - Outlook']
     bankDLG.child_window(title="With Attachments, Subject Suspicious account activity detected, URGENT action needed., Received 1/31/2022, Size 288 KB, Flag Status Unflagged, ", control_type="DataItem").click_input()
     time.sleep(30)
-    #marriottDLG['BonusPointsOffer.docm776 KB1 of 1 attachmentsUse alt + down arrow to open the options menu'].click_input(double=True) #opens the attachment
     bankDLG['FraudNotification.docm156 KB1 of 1 attachmentsUse alt + down arrow to open the options menu'].click_input(double=True) #opens the attachment
     time.sleep(10)	
 def Word():
