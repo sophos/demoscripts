@@ -114,12 +114,12 @@ def TMSeed():
     mainDLG.type_keys('{ENTER}')
 
 if __name__ == '__main__':
+    SophosUI()
+    time.sleep(20)
     disableHitmanPro('HeapHeapHooray','off')
     time.sleep(3)
     toggleHitMan()
     time.sleep(3)
-    SophosUI()
-    time.sleep(20)
     Outlook()
     time.sleep(20)
     Word()
