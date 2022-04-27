@@ -42,6 +42,7 @@ def SophosUI():
         dlg.child_window(title="Close", auto_id="NavBarCloseButton", control_type="Button").click_input()
     else:
         dlg.child_window(auto_id="OverrideSettingsCheckBox", control_type="CheckBox").click_input()
+        dlg.child_window(auto_id="Files", control_type="Button").click_input()
         dlg.child_window(auto_id="Enable Deep Learning", control_type="Button").click_input()
         dlg.child_window(auto_id="Ransomware Detection", control_type="Button").click_input()
         dlg.child_window(auto_id="Exploit Mitigation", control_type="Button").click_input()
