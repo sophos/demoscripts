@@ -29,9 +29,13 @@ def Word():
     time.sleep(20)
     mainDLG.child_window(title="Enable Content", control_type="Button").click_input(double=True)
 def ART():
-    app = Application(backend="uia").connect(title_re="Administrator: Windows PowerShell")
+    app = Application(backend="uia").connect(path="explorer.exe")
+    sys_tray = app.window(class_name="Shell_TrayWnd")
+    sys_tray['Administrator: Windows Powershell'].click()
+    app = Application(backend="uia").connect(title="Administrator: Windows PowerShell")
     mainDLG = app['Administrator: Windows PowerShell']
     mainDLG.type_keys('Y')
+    time.sleep(5)
     mainDLG.type_keys('{ENTER}')
 if __name__ == '__main__':
     Outlook()
