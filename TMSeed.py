@@ -36,7 +36,7 @@ def SophosUI():
     dlg = app['Sophos Endpoint Agent']
 
     dlg['SettingsRadioButton'].click_input()
-    time.sleep(3)
+    time.sleep(5)
     if (tamperCheck() == 1):
         dlg.child_window(auto_id="OverrideSettingsCheckBox", control_type="CheckBox").click_input()
         dlg.child_window(title="Close", auto_id="NavBarCloseButton", control_type="Button").click_input()
@@ -105,5 +105,5 @@ if __name__ == '__main__':
     Outlook()
     time.sleep(20)
     Word()
-    time.sleep(120)
+    time.sleep(60)
     TMSeed()
