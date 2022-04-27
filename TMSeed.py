@@ -1,6 +1,21 @@
 import psutil
 from pywinauto import Application, Desktop, keyboard
 import time
+import os
+import winreg
+
+def disableHitmanPro(subkey,value):
+    reg_key = winreg.OpenKey(
+        winreg.HKEY_LOCAL_MACHINE,
+        r"SOFTWARE\HitmanPro.Alert",
+        0, winreg.KEY_SET_VALUE)
+    winreg.SetValueEx(reg_key,subkey,0,winreg.REG_SZ, value)
+
+def toggleHitMan():
+    os.system("net stop hmpalertsvc")
+    time.sleep(5)
+    os.system("net start hmpalertsvc")
+
 def returnPID(process):
     process_name = process
     processID = None
@@ -24,7 +39,6 @@ def tamperCheck():
     checkbox = dlg.child_window(auto_id="OverrideSettingsCheckBox", control_type="CheckBox").wrapper_object()
     value = checkbox.get_toggle_state()
     return value
-
 
 sophosUI = returnPID("Sophos UI.exe")
 
@@ -100,6 +114,10 @@ def TMSeed():
     mainDLG.type_keys('{ENTER}')
 
 if __name__ == '__main__':
+    disableHitmanPro('HeapHeapHooray','off')
+    time.sleep(3)
+    toggleHitMan()
+    time.sleep(3)
     SophosUI()
     time.sleep(20)
     Outlook()
