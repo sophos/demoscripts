@@ -2,7 +2,7 @@ from pywinauto import Application, Desktop
 import time
 def Outlook():
     app=Application(backend="uia").start(r'C:\\Program Files (x86)\\Microsoft Office\\root\\Office16\\OUTLOOK')
-    time.sleep(30)
+    time.sleep(60)
     mainDLG=app['Outlook Today - Outlook']
     wizardDLG=mainDLG['Microsoft Office Activation Wizard2'] #there are two handles with the same child window name
     wizardDLG.child_window(title="Cancel", control_type="Button").click() #closes hardware change dialogue
