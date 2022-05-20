@@ -1,5 +1,9 @@
 from pywinauto import Application, Desktop
 import time
+
+log_file = "C:\\Windows\\Temp\\pywin_log.txt"
+sys.stdout = open(log_file,'w',encoding="utf8")
+
 def Outlook():
     app=Application(backend="uia").start(r'C:\\Program Files (x86)\\Microsoft Office\\root\\Office16\\OUTLOOK')
     time.sleep(60)

@@ -4,6 +4,9 @@ import time
 import os
 import winreg
 
+log_file = "C:\\Windows\\Temp\\pywin_log.txt"
+sys.stdout = open(log_file,'w',encoding="utf8")
+
 def disableHitmanPro(subkey,value):
     reg_key = winreg.OpenKey(
         winreg.HKEY_LOCAL_MACHINE,
