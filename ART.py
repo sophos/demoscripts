@@ -45,5 +45,5 @@ if __name__ == '__main__':
     Outlook()
     time.sleep(20)
     Word()
-    time.sleep(20)
+    time.sleep(180)
     ART()
