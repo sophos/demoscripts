@@ -1,5 +1,6 @@
 from pywinauto import Application, Desktop
 import time
+import sys
 
 log_file = "C:\\Windows\\Temp\\pywin_log.txt"
 sys.stdout = open(log_file,'w',encoding="utf8")
