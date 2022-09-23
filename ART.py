@@ -1,38 +1,151 @@
-from pywinauto import Application, Desktop, keyboard
+from pywinauto import Application, Desktop, keyboard, mouse
 import time
+import logging
 import sys
+import os
+import psutil
+import wmi
 
-log_file = "C:\\Windows\\Temp\\pywin_log.txt"
-sys.stdout = open(log_file,'w',encoding="utf8")
 
-def Outlook():
-    app = Application(backend="uia").start(r'C:\\Program Files (x86)\\Microsoft Office\\root\\Office16\\OUTLOOK')
-    time.sleep(60) #Need time for the activate office dialogue to appear. 
-    mainDLG = app['Outlook Today - Outlook']
-    wizardDLG=mainDLG['Microsoft Office Activation Wizard2'] #there are two handles with the same child window name
-    wizardDLG.child_window(title="Cancel", control_type="Button").click() #closes hardware change dialogue
-    time.sleep(5)
-    mainDLG= app['Outlook Today - Outlook'] #Main application is presented as 'Outlook Today - Outlook'
-    mainDLG.sophosTreeItem.click_input(double=True)#Expand the Sophos profile tree
-    time.sleep(5)
-    sophosDLG = app['Sophos - Outlook']
-    artDLG=sophosDLG['Atomic Red Team'].click_input(double=True)
-    time.sleep(5)
-    bankDLG=app['Atomic Red Team - Sophos - Outlook']
-    bankDLG.child_window(title="With Attachments, Subject Suspicious account activity detected, URGENT action needed., Received 1/31/2022, Size 288 KB, Flag Status Unflagged, ", control_type="DataItem").click_input()
-    time.sleep(20)
-    bankDLG['FraudNotification.docm156 KB1 of 1 attachmentsUse alt + down arrow to open the options menu'].click_input(double=True) #opens the attachment
-    time.sleep(10)	
-def Word():
-    app = Application(backend="uia").connect(title_re="^FraudNotification")
-    time.sleep(20)
-    mainDLG = app.window(title_re="^FraudNotification")
-    wizardDLG = mainDLG['Microsoft Office Activation Wizard2'] #there are two handles with the same child window name
-    wizardDLG.child_window(title="Cancel", control_type="Button").click() #closes hardware change dialogue
-    time.sleep(20)
-    mainDLG.child_window(title="Enable Editing", control_type="Button").click_input(double=True)
-    time.sleep(20)
-    mainDLG.child_window(title="Enable Content", control_type="Button").click_input(double=True)
+#file locations for executables and log files
+outlook_path = "C:\\Program Files (x86)\\Microsoft Office\\root\\Office16\\OUTLOOK.EXE"
+check_file = "C:\\Windows\\Temp\\test.txt"
+
+
+#These are the dialogues during the initial setup of Microsoft Outlook
+productKey = "Enter your product key"
+respectPrivacy = "Microsoft respects your privacy"
+betterTogether = "Getting better together"
+poweringExperience = "Powering your experiences"
+
+#These are the names of each email that kicks off a different threat graph
+atomicRed = "With Attachments, Subject Suspicious account activity detected, URGENT action needed., Received 1/31/2022, Size 288 KB, Flag Status Unflagged, "
+
+#Code to establish logging
+logger = logging.getLogger(__name__)
+stream_handler = logging.StreamHandler(sys.stdout)
+file_handler = logging.FileHandler("AtomicRedTeam.log")
+logger.addHandler(file_handler)
+logger.addHandler(stream_handler)
+formatter = logging.Formatter("[%(asctime)s] %(levelname)s:%(name)s:%(message)s")
+stream_handler.setFormatter(formatter)
+file_handler.setFormatter(formatter)
+logger.setLevel(logging.DEBUG)
+
+def killProcess(process):
+    ti = 0
+    name = process
+    logger.debug('The process I am seeking to kill is: ' + str(name))
+    f = wmi.WMI()
+
+    for process in f.Win32_Process():
+        if process.name == name:
+            process.Terminate()
+            logger.debug('I have found, and killed ' + str(name))
+            ti +=1
+    if ti == 0:
+        logger.debug('There are no running instances of ' + str(name))
+
+
+def processRunCheck(processname):
+    for proc in psutil.process_iter():
+        try:
+            if processname.lower() in proc.name().lower():
+                return True
+        except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
+                pass
+    return False;
+
+#This function searchs a text file for a string in the dialogue object
+def currentWindow(app):
+    string = str(app.windows()[0])
+    remove_first = string[25:]
+    window = remove_first[:-9]
+    return window
+
+def check_id(filepath,string,dialogue_object):
+    temp = sys.stdout
+    sys.stdout = open(filepath,'w',encoding="utf8")
+    print(dialogue_object.print_control_identifiers())
+    sys.stdout = temp
+    with open(filepath, 'r') as file:
+        content = file.read()
+        if string in content:
+            logger.debug(f'Dialogue: {string} in {dialogue_object} located.')
+            return True
+        else:
+            logger.debug(f'Dialogue: {string} in {dialogue_object} not found.')
+            return False
+
+def revert_tree(app,check_file):
+
+    dlg = app[currentWindow(app)]
+    if check_id(check_file,"Junk Email",dlg) == True:
+        dlg = app[currentWindow(app)]
+        dlg.child_window(title="Sophos", control_type="TreeItem").collapse()
+        logger.debug("Tree is reset")
+    else:
+        logger.debug("Tree is already collapsed")
+        pass
+
+def atomicOutlook():
+    logger.debug("Starting Outlook Function")
+    time.sleep(3)
+    logger.debug("Outlook is starting...")
+    app=Application(backend="uia").start(outlook_path)
+    time.sleep(10)
+    mainDLG=app['Outlook Today - Outlook']
+    logger.debug("Pywinauto is connected to Outlook.")
+    logger.debug("Clicking through product key dialogue.")
+    mainDLG.child_window(title="Enter your product key", control_type="Window").child_window(title="Close", control_type="Button").click_input()
+    time.sleep(3)
+    if (check_id(check_file,respectPrivacy,mainDLG) == True):
+        logger.debug("Privacy dialogue found, clicking through the rest of initial setup prompts.")
+        mainDLG['Microsoft respects your privacyDialog2'].child_window(title="Next", control_type="Button").click_input()
+        time.sleep(2)
+        mainDLG['Getting better together'].child_window(title="Don't send optional data", control_type="Button").click_input()
+        time.sleep(3)
+        mainDLG['Powering your experiences2'].child_window(title="Done", control_type="Button").click_input()
+    revert_tree(app,check_file)
+    logger.debug("Reverted Email Inbox Tree back to initial state..")
+    mainDLG.child_window(title="Sophos", control_type="TreeItem").click_input(double=True)
+    mainDLG.child_window(title="Inbox", control_type="TreeItem").click_input()
+    mainDLG = app['Inbox - Sophos - Outlook (Unlicensed Product)']
+    mainDLG[atomicRed].click_input()
+    logger.debug("Opening the attachment...")
+    mainDLG.child_window(title="Attachment options", control_type="Button").click_input()
+    mainDLG.ContextMenu.Open.click_input()
+    logger.debug("Attachment opened...")
+
+def returnPID(process):
+    process_name = process
+    processID = None
+    for proc in psutil.process_iter():
+        if process_name in proc.name():
+            processID = proc.pid
+            return (processID)
+
+def atomicWord():
+    logger.debug("Word process is starting...")   
+    word = returnPID("WINWORD.EXE")
+
+    if (isinstance(word,int) == False):
+        logger.debug("Word PID not detected!")
+   
+    app = Application(backend="uia").connect(process=word, visible_only=False)
+
+    try:
+        try:
+            mainDLG = app['Microsoft Word']
+            mainDLG.No.click_input()
+        except:
+            logger.debug("Word is not in safe mode")
+        finally:
+            mainDLG = app.window(title_re="^FraudNotification")
+            mainDLG.child_window(title="Enter your product key", control_type="Window").child_window(title="Close", control_type="Button").click_input()
+    except:
+        logger.debug("Sophos has detected the malicious file.")
+
 def ART():
     app = Application(backend="uia").connect(path="explorer.exe")
     sys_tray = app.window(class_name="Shell_TrayWnd")
@@ -42,9 +155,35 @@ def ART():
     mainDLG.type_keys('Y')
     time.sleep(5)
     mainDLG.type_keys('{ENTER}')
+
 if __name__ == '__main__':
-    Outlook()
-    time.sleep(20)
-    Word()
-    time.sleep(180)
-    ART()
+    logger.debug("Killing any Microsoft Word Processes...")
+    killProcess('WINWORD.EXE')
+    if (processRunCheck('outlook.exe') == False):
+        logger.debug("Outlook process not found, starting function...")
+        atomicOutlook()
+        logger.debug("Sleeping for 20 seconds...")
+        time.sleep(20)
+        logger.debug("Starting Word process...")
+        atomicWord()
+        logger.debug("Sleeping for 180 seconds...")
+        time.sleep(180)
+        logger.debug("Starting Atomic Red Team Function...")
+        ART()
+        logger.debug("Script Complete.")
+    else:
+        logger.debug("Killing existing Outlook process...")
+        killProcess('OUTLOOK.EXE')
+        logger.debug("Outlook processed killed.")
+        logger.debug("Sleeping for 10 seconds...")
+        time.sleep(10)
+        atomicOutlook()
+        logger.debug("Sleeping for 20 seconds...")
+        time.sleep(20)
+        logger.debug("Starting Word process...")
+        atomicWord()
+        logger.debug("Sleeping for 180 seconds...")
+        time.sleep(180)
+        logger.debug("Starting Atomic Red Team Function...")
+        ART()
+        logger.debug("Script Complete.")
