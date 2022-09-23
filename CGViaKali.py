@@ -79,7 +79,7 @@ def check_id(filepath,string,dialogue_object):
             logger.debug(f'Dialogue: {string} in {dialogue_object} not found.')
             return False
         
-#This function reverts the inbox folder tree to a predicatble state, for repeatability.
+#This function reverts the inbox folder tree to a predictable state, for repeatability.
 def revert_tree(app,check_file):
 
     dlg = app[currentWindow(app)]
