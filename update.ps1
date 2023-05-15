@@ -2,7 +2,7 @@
 # v0.2
 
 # Define latest image version
-$latestVersion = "2"
+$latestVersion = "3"
 
 # Specify registry path and value
 $registryPath = "HKLM:\SYSTEM\SophosSE"
