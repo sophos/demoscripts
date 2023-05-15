@@ -2,7 +2,7 @@
 # v0.2
 
 # Define latest image version
-$latestVersion = "1"
+$latestVersion = "2"
 
 # Specify registry path and value
 $registryPath = "HKLM:\SYSTEM\SophosSE"
@@ -32,6 +32,8 @@ if ($currentVersion -eq "BETA") {
 	Write-Output "$(Get-TimeStamp) Image version is $currentVersion" | Out-file c:\threat\image\update_log.txt -append
 	Write-Output "$(Get-TimeStamp) Latest version is $latestVersion, starting updates" | Out-file c:\threat\image\update_log.txt -append
 # UPDATE COMMANDS GO HERE
+Invoke-WebRequest -Uri "http://threatmenu.naseeast.com/threat/update/assets/Feature Control Script.bat" -OutFile "c:\threat\image\Feature Control Script.bat"
+Invoke-WebRequest -Uri "http://threatmenu.naseeast.com/threat/update/assets/Feature Control.lnk" -OutFile "c:\users\sophos\desktop\Feature Control.lnk"
 
 } else {
 	Write-Output "$(Get-TimeStamp) ERROR Version not found in Registry" | Out-file c:\threat\image\update_log.txt -append
