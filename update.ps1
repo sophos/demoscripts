@@ -18,7 +18,7 @@ function Get-TimeStamp {
 }
 
 # Specify log file location
-$logFile = "c:\threat\image\update_log.txt"
+$logFile = "c:\threat\image\update\update_log.txt"
 
 # Script start
 Write-Output "$(Get-TimeStamp) Update script starting" | Out-file $logFile -append
