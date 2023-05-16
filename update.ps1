@@ -1,5 +1,5 @@
 # Windows 11 SE Resources Image Update Script
-# v0.4
+# v0.41
 
 $ErrorActionPreference = "Stop"
 
@@ -40,16 +40,24 @@ if ($currentVersion -eq "BETA") {
 Try {
     Write-Output "$(Get-TimeStamp) Download update zip file" | Out-file $logFile -append
     Invoke-WebRequest -Uri "http://threatmenu.naseeast.com/threat/update/update.zip" -OutFile "c:\threat\image\update\update.zip" 2>&1 | Tee-Object -FilePath "$logFile" -Append
-    Write-Output "$(Get-TimeStamp) File downloaded successfully." | Out-File -FilePath $logFile -Append
+    Write-Output "$(Get-TimeStamp) File download successfull" | Out-File -FilePath $logFile -Append
 
+    Write-Output "$(Get-TimeStamp) Unzup update zip file" | Out-File -FilePath $logFile -Append    
     Expand-Archive -Path "c:\threat\image\update\update.zip" -DestinationPath "c:\threat\image\update\" -Force
-    Write-Output "$(Get-TimeStamp) File unzipped successfully." | Out-File -FilePath $logFile -Append
+    Write-Output "$(Get-TimeStamp) File unzip successful" | Out-File -FilePath $logFile -Append
 
+    Write-Output "$(Get-TimeStamp) Copy Feature Control Script to image folder" | Out-file $logFile -append
     Copy-Item -Path "C:\threat\image\update\Feature Control Script.bat" -Destination "C:\threat\image"
+    Write-Output "$(Get-TimeStamp) Copy of Feature Control Script successful" | Out-file $logFile -append
+
+
+    Write-Output "$(Get-TimeStamp) Copy Feature Control shortcut to desktop" | Out-file $logFile -append
     Copy-Item -Path "C:\threat\image\update\Feature Control.lnk" -Destination "C:\users\sophos\Desktop"
+    Write-Output "$(Get-TimeStamp) Copy of Feature Control shortcut successful" | Out-file $logFile -append
     
+    Write-Output "$(Get-TimeStamp) Update Hosts file" | Out-File -FilePath $logFile -Append
     Add-Content -Path "C:\Windows\System32\drivers\etc\hosts" -Value "127.0.0.1    example.com" -ErrorAction Stop
-    Write-Output "$(Get-TimeStamp) Hosts file updated successfully." | Out-File -FilePath $logFile -Append
+    Write-Output "$(Get-TimeStamp) Hosts file update successful" | Out-File -FilePath $logFile -Append
 
 }
 Catch {
