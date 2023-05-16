@@ -1,5 +1,5 @@
 # Windows 11 SE Resources Image Update Script
-# v0.3
+# v0.4
 
 $ErrorActionPreference = "Stop"
 
@@ -48,6 +48,9 @@ Try {
     Copy-Item -Path "C:\threat\image\update\Feature Control Script.bat" -Destination "C:\threat\image"
     Copy-Item -Path "C:\threat\image\update\Feature Control.lnk" -Destination "C:\users\sophos\Desktop"
     
+    Add-Content -Path "C:\Windows\System32\drivers\etc\hosts" -Value "127.0.0.1    example.com" -ErrorAction Stop
+    Write-Output "$(Get-TimeStamp) Hosts file updated successfully." | Out-File -FilePath $logFile -Append
+
 }
 Catch {
     $errorMessage = $_.Exception.Message
