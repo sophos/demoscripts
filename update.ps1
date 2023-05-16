@@ -1,5 +1,7 @@
-# Windows 11 SE Resources Image Update Script
+ # Windows 11 SE Resources Image Update Script
 # v0.2
+
+$ErrorActionPreference = "Stop"
 
 # Define latest image version
 $latestVersion = "2"
@@ -29,18 +31,30 @@ if ($currentVersion -eq "BETA") {
 # BETA UPDATE COMMANDS GO HERE
 
 }  elseif ($currentVersion -eq $latestVersion) {
-	Write-Output "$(Get-TimeStamp) Image version is $currentVersion" | Out-file $logFile -append
-	Write-Output "$(Get-TimeStamp) Latest version is $latestVersion, no updates needed" | Out-file $logFile -append
+	Write-Output "$(Get-TimeStamp) Image version is $currentVersion, latest version is $latestVersion. No updates needed." | Out-file $logFile -append
 } elseif ($currentVersion -lt $latestVersion) {
-	Write-Output "$(Get-TimeStamp) Image version is $currentVersion" | Out-file $logFile -append
-	Write-Output "$(Get-TimeStamp) Latest version is $latestVersion, starting updates" | Out-file $logFile -append
-# UPDATE COMMANDS GO HERE
-Write-Output "$(Get-TimeStamp) Download feature control script" | Out-file $logFile -append
-Invoke-WebRequest -Uri "http://threatmenu.naseeast.com/threat/update/assets/Feature Control Script.bat" -OutFile "c:\threat\image\Feature Control Script.bat" > $logFile
+	Write-Output "$(Get-TimeStamp) Image version is $currentVersion, latest version is $latestVersion. Starting updates." | Out-file $logFile -append
 
-Write-Output "$(Get-TimeStamp) Download feature control shortcut" | Out-file $logFile -append
-Invoke-WebRequest -Uri "http://threatmenu.naseeast.com/threat/update/assets/Feature Control.lnk" -OutFile "c:\users\sophos\desktop\Feature Control.lnk" > $logFile
+# UPDATE COMMANDS GO HERE
+
+Try {
+    Write-Output "$(Get-TimeStamp) Download update zip file" | Out-file $logFile -append
+    Invoke-WebRequest -Uri "http://threatmenu.naseeast.com/threat/update/update.zip" -OutFile "c:\threat\image\update\update.zip" 2>&1 | Tee-Object -FilePath "$logFile" -Append
+    Write-Output "$(Get-TimeStamp) File downloaded successfully." | Out-File -FilePath $logFile -Append
+
+    Expand-Archive -Path "c:\threat\image\update\update.zip" -DestinationPath "c:\threat\image\update\" -Force
+    Write-Output "$(Get-TimeStamp) File unzipped successfully." | Out-File -FilePath $logFile -Append
+
+    Copy-Item -Path "C:\threat\image\update\Feature Control Script.bat" -Destination "C:\threat\image"
+    Copy-Item -Path "C:\threat\image\update\Feature Control.lnk" -Destination "C:\users\sophos\Desktop"
+    
+}
+Catch {
+    $errorMessage = $_.Exception.Message
+    Write-Output "$(Get-TimeStamp) ERROR: $errorMessage" | Out-File -FilePath $logFile -Append
+    exit 1
+}
 
 } else {
 	Write-Output "$(Get-TimeStamp) ERROR Version not found in Registry" | Out-file $logFile -append
-} 
+}  
