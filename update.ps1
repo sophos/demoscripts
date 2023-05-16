@@ -4,7 +4,7 @@
 $ErrorActionPreference = "Stop"
 
 # Define latest image version
-$latestVersion = "2"
+$latestVersion = "1"
 
 # Specify registry path and value
 $registryPath = "HKLM:\SYSTEM\SophosSE"
