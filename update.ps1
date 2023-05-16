@@ -1,5 +1,5 @@
 # Windows 11 SE Resources Image Update Script
-# v0.2
+# v0.3
 
 $ErrorActionPreference = "Stop"
 
